@@ -34,7 +34,7 @@ def test_load_answers(tmp_path):
     assert answers == ["A", "B"]
 
 
-def test_run_and_grade():
+def test_run_and_grade(tmp_path):
     client = DummyClient()
     questions = ["q1", "q2"]
     responses = run_benchmark(client, questions)
@@ -42,5 +42,10 @@ def test_run_and_grade():
     assert responses == ["response 1", "response 2"]
     assert client.prompts == questions
 
-    scores = grade(responses, ["a", "b"])
+    output_file = tmp_path / "responses.txt"
+    scores = grade(responses, ["a", "b"], str(output_file))
     assert scores == {1: 0.0, 2: 0.0}
+    assert output_file.read_text().splitlines() == [
+        "Q001: response 1",
+        "Q002: response 2",
+    ]

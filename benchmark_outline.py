@@ -1,13 +1,20 @@
 import os
 import argparse
-from typing import List, Dict
-import lmstudio as lms
+from typing import List, Dict, Optional
+try:
+    import lmstudio as lms
+except ImportError:  # pragma: no cover - optional dependency for tests
+    lms = None
 
 
 class LMStudioClient:
     """Client to interact with local LM Studio models via the lmstudio-python SDK."""
 
     def __init__(self, model_name: str):
+        if lms is None:
+            raise ImportError(
+                "lmstudio package is required for LMStudioClient but is not installed"
+            )
         # Initialize the model using the convenience API
         self.model = lms.llm(model_name)
 
@@ -80,8 +87,23 @@ def run_benchmark(client: LMStudioClient, questions: List[str]) -> List[str]:
     return responses
 
 
-def grade(responses: List[str], answers: List[str]) -> Dict[int, float]:
-    """Placeholder grading logic. Returns zero for all questions by default."""
+def grade(
+    responses: List[str],
+    answers: List[str],
+    output_file: Optional[str] = None,
+) -> Dict[int, float]:
+    """Placeholder grading logic.
+
+    All responses are written to ``output_file`` if provided so that they can be
+    graded by an external model. Each line of the file contains ``Q###:``
+    followed by the model's response for that question.
+    """
+
+    if output_file:
+        with open(output_file, "w", encoding="utf-8") as f:
+            for i, resp in enumerate(responses, start=1):
+                f.write(f"Q{i:03}: {resp}\n")
+
     scores: Dict[int, float] = {}
     for i, _ in enumerate(responses, start=1):
         scores[i] = 0.0
@@ -104,6 +126,10 @@ def main():
         '--answers-dir', type=str, default='answers',
         help='Path to the directory containing answer .md files'
     )
+    parser.add_argument(
+        '--output', type=str, default='responses.txt',
+        help='File to write model responses for external grading'
+    )
     args = parser.parse_args()
 
     client = LMStudioClient(args.model)
@@ -113,7 +139,7 @@ def main():
     print(f"Loaded {len(questions)} questions and {len(answers)} answers.")
     print("Running benchmark...")
     responses = run_benchmark(client, questions)
-    scores = grade(responses, answers)
+    scores = grade(responses, answers, args.output)
 
     print("Results:")
     for idx, score in scores.items():
