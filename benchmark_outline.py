@@ -61,10 +61,19 @@ def load_answers(path: str) -> List[str]:
 
 
 def run_benchmark(client: LMStudioClient, questions: List[str]) -> List[str]:
-    """Query the model for each question and collect responses."""
+    """Query the model for each question, printing progress and responses."""
     responses = []
-    for prompt in questions:
-        responses.append(client.generate(prompt))
+    total = len(questions)
+    bar_width = 20
+    for i, prompt in enumerate(questions, start=1):
+        resp = client.generate(prompt)
+        responses.append(resp)
+
+        filled = int(bar_width * i / total)
+        bar = "#" * filled + "-" * (bar_width - filled)
+        print(f"[{bar}] {i}/{total}")
+        print(resp)
+
     return responses
 
 
