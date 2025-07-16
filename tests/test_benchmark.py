@@ -42,10 +42,8 @@ def test_run_and_grade(tmp_path):
     assert responses == ["response 1", "response 2"]
     assert client.prompts == questions
 
-    output_file = tmp_path / "responses.txt"
-    scores = grade(responses, ["a", "b"], str(output_file))
+    output_dir = tmp_path / "report"
+    scores = grade(responses, ["a", "b"], str(output_dir))
     assert scores == {1: 0.0, 2: 0.0}
-    assert output_file.read_text().splitlines() == [
-        "Q001: response 1",
-        "Q002: response 2",
-    ]
+    assert (output_dir / "Q001.txt").read_text() == "response 1"
+    assert (output_dir / "Q002.txt").read_text() == "response 2"

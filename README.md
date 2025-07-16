@@ -28,6 +28,10 @@ Set any necessary environment variables (for example `LM_STUDIO_URL` and `LM_STU
 python benchmark_outline.py
 ```
 
+This will write model responses to a `report/` directory, creating one `Q###.txt`
+file for each question. Use the `--output-dir` argument to change where the
+files are stored.
+
 The script loads all questions, queries the model, and prints placeholder scores. Implement `LMStudioClient.generate` and `grade` to perform real evaluations.
 
 ## Tests

@@ -90,19 +90,21 @@ def run_benchmark(client: LMStudioClient, questions: List[str]) -> List[str]:
 def grade(
     responses: List[str],
     answers: List[str],
-    output_file: Optional[str] = None,
+    output_dir: Optional[str] = None,
 ) -> Dict[int, float]:
     """Placeholder grading logic.
 
-    All responses are written to ``output_file`` if provided so that they can be
-    graded by an external model. Each line of the file contains ``Q###:``
-    followed by the model's response for that question.
+    All responses are saved under ``output_dir`` if provided so that they can be
+    graded by an external model. Each question gets its own ``Q###.txt`` file
+    containing the model's response.
     """
 
-    if output_file:
-        with open(output_file, "w", encoding="utf-8") as f:
-            for i, resp in enumerate(responses, start=1):
-                f.write(f"Q{i:03}: {resp}\n")
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        for i, resp in enumerate(responses, start=1):
+            file_path = os.path.join(output_dir, f"Q{i:03}.txt")
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(resp)
 
     scores: Dict[int, float] = {}
     for i, _ in enumerate(responses, start=1):
@@ -127,8 +129,8 @@ def main():
         help='Path to the directory containing answer .md files'
     )
     parser.add_argument(
-        '--output', type=str, default='responses.txt',
-        help='File to write model responses for external grading'
+        '--output-dir', type=str, default='report',
+        help='Directory to write model responses for external grading'
     )
     args = parser.parse_args()
 
@@ -139,7 +141,7 @@ def main():
     print(f"Loaded {len(questions)} questions and {len(answers)} answers.")
     print("Running benchmark...")
     responses = run_benchmark(client, questions)
-    scores = grade(responses, answers, args.output)
+    scores = grade(responses, answers, args.output_dir)
 
     print("Results:")
     for idx, score in scores.items():
