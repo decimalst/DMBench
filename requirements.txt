@@ -1,2 +1,2 @@
-lmstudio
-pytest
+# Optional: needed only for real model runs, not tests or offline validation.
+lmstudio==1.5.0

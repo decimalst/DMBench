@@ -1,0 +1,1461 @@
+{
+  "schema_version": 1,
+  "dataset_version": "2.0.0",
+  "ruleset": "D&D 5e (2014), official errata; revised Bladesinger explicitly scoped in Q094",
+  "audited_on": "2026-09-21",
+  "baseline_commit": "3ce375f",
+  "sources": {
+    "srd": {
+      "title": "System Reference Document 5.1 (2014 rules, CC BY 4.0)",
+      "url": "https://www.dndbeyond.com/attachments/39j2li89/SRD5.1-CCBY4.0License.pdf",
+      "access": "public"
+    },
+    "basic_items": {
+      "title": "Basic Rules (2014), Magic Items",
+      "url": "https://www.dndbeyond.com/sources/dnd/basic-rules-2014/magic-items",
+      "access": "public"
+    },
+    "feats": {
+      "title": "D&D Beyond feat index, explicitly marked Player's Handbook (2014) entries",
+      "url": "https://www.dndbeyond.com/feats",
+      "access": "public_summary"
+    },
+    "phb": {
+      "title": "Player's Handbook (2014)",
+      "url": "https://www.dndbeyond.com/sources/dnd/phb-2014",
+      "access": "purchase_required"
+    },
+    "dmg": {
+      "title": "Dungeon Master's Guide (2014)",
+      "url": "https://www.dndbeyond.com/sources/dnd/dmg-2014",
+      "access": "purchase_required"
+    },
+    "sac": {
+      "title": "Sage Advice Compendium (2014), official rulings",
+      "url": "https://www.dndbeyond.com/sources/dnd/sac/sage-advice-compendium",
+      "access": "public"
+    },
+    "scag_errata": {
+      "title": "Sword Coast Adventurer's Guide errata v2.2 (2021)",
+      "url": "https://media.wizards.com/2021/dnd/downloads/SCAG-Errata.pdf",
+      "access": "public"
+    },
+    "phb_errata": {
+      "title": "Player's Handbook errata v2.0.2 (2020; hosted at a 2018 URL)",
+      "url": "https://media.wizards.com/2018/dnd/downloads/PH-Errata.pdf",
+      "access": "public"
+    },
+    "basic_personality": {
+      "title": "Basic Rules (2014), Personality and Background",
+      "url": "https://www.dndbeyond.com/sources/dnd/basic-rules-2014/personality-and-background",
+      "access": "public"
+    }
+  },
+  "items": {
+    "Q001": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Using Ability Scores: Ability Scores and Modifiers",
+      "audit_note": "18 gives +4.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q002": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Weapons table, longsword",
+      "audit_note": "Versatile is the listed property.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q003": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd",
+        "basic_items"
+      ],
+      "locator": "Magic Items: Activating an Item; Combat: Two-Weapon Fighting; Rage; Misty Step",
+      "audit_note": "Clarified 2014 action economy; healing potions use an action.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q004": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Monk: Stunning Strike (p. 28)",
+      "audit_note": "Ends at the end of the monk's next turn, not a fixed duration measured from the hit.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q005": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Conditions: Unconscious",
+      "audit_note": "Automatic Strength and Dexterity saving-throw failures.",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    "Q006": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Magic Items: Attunement",
+      "audit_note": "Three simultaneous items, not a daily limit.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q007": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Magic Missile (p. 161)",
+      "audit_note": "Three darts plus one per slot level above first gives five, not six.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q008": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Combat: Cover",
+      "audit_note": "Half cover grants +2 AC and Dexterity saves.",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    "Q009": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Animated Objects: Flying Sword (p. 264)",
+      "audit_note": "AC 17; distinguished monster, magic item, and animated-object spell statistics.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q010": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Fighter: Extra Attack",
+      "audit_note": "Replaced a multiple-correct-answer stem with the fighter's unique four-attack progression.",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    "Q011": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Counterspell",
+      "audit_note": "A third-level casting automatically counters spells of third level or lower, assuming a legal target.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q012": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Combat: Squeezing into a Smaller Space (p. 92)",
+      "audit_note": "Included all squeezing penalties, not an incomplete speed-halving shorthand.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q013": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Lifestyle Expenses table (p. 73)",
+      "audit_note": "Comfortable costs 2 gp/day, not 1 gp/day.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q014": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Races: Tiefling (p. 7)",
+      "audit_note": "Default darkvision is 60 feet.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q015": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Barbarian: Rage (p. 8)",
+      "audit_note": "Base Rage resists all bludgeoning, piercing, and slashing, but not fire; excluded subclass exceptions.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q016": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd",
+        "sac"
+      ],
+      "locator": "Spellcasting: Material Components; SAC: Components",
+      "audit_note": "Old question also had V and S as correct answers. All new choices are material components; the priced diamond is required.",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    "Q017": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Resting: Short Rest (p. 87)",
+      "audit_note": "A short rest lasts at least one hour.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q018": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "basic_personality"
+      ],
+      "locator": "Personality and Background: Inspiration, Using Inspiration",
+      "audit_note": "Specified eligible rolls and the 2014 advantage mechanic.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q019": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Weapons table",
+      "audit_note": "Rapier damage is 1d8.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q020": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "feats"
+      ],
+      "locator": "Moderately Armored, Player's Handbook (2014) entry",
+      "audit_note": "Official legacy summary confirms medium armor and shields; do not use the revised 2024 feat.",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    "Q021": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Spellcasting: Concentration",
+      "audit_note": "Damage calls for a Constitution saving throw, not an ability check.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q022": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Using Ability Scores: Passive Checks",
+      "audit_note": "10 plus the full Perception modifier; excluded advantage and other modifiers.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q023": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Combat: Death Saving Throws",
+      "audit_note": "A roll of 10 or higher succeeds.",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    "Q024": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Sorcerer table (p. 42)",
+      "audit_note": "A level-3 sorcerer knows four cantrips.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q025": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Wizard: Ability Score Improvement",
+      "audit_note": "Specified wizard class levels to avoid fighter, rogue, and multiclass exceptions.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q026": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Faerie Fire",
+      "audit_note": "The area is a 20-foot cube.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q027": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Armor table",
+      "audit_note": "Plate 18 plus shield 2 equals 20, not 18.",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    "Q028": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Adventuring: Jumping",
+      "audit_note": "Specified running start and movement budget; distance is Strength score in feet.",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    "Q029": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Monsters: Vulnerabilities, Resistances, and Immunities",
+      "audit_note": "Poison immunity prevents poison damage absent an explicit exception.",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    "Q030": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Shield",
+      "audit_note": "+5 AC for the spell's duration, including the triggering attack.",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    "Q031": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Combat: Critical Hits",
+      "audit_note": "Double the attack's damage dice, not modifiers or the entire rolled total.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q032": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Ammunition and Loading",
+      "audit_note": "Loading applies per firing action, bonus action, or reaction, not once per whole turn.",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    "Q033": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Warlock table (p. 46)",
+      "audit_note": "Pact Magic slots are fifth level; Mystic Arcanum is a separate feature.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q034": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Spellcasting: Areas of Effect (pp. 102-103)",
+      "audit_note": "Replaced an undefined corridor/splash-grid question with the total-cover rule.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q035": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Legendary Creatures: Lair Actions (p. 260)",
+      "audit_note": "Initiative count 20, losing ties.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q036": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Combat: Ready",
+      "audit_note": "Releasing the readied shot uses a reaction when the trigger finishes.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q037": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Rogue: Proficiencies",
+      "audit_note": "Dexterity and Intelligence.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q038": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Magic Items: Weapon, +1, +2, or +3",
+      "audit_note": "Bonus applies to attack and damage rolls.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q039": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Goodberry",
+      "audit_note": "Spell creates up to ten, not necessarily exactly ten; question now asks the maximum.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q040": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Wall of Stone (pp. 190-191)",
+      "audit_note": "Ten minutes of concentration makes the wall permanent, not one minute.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q041": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Faerie Fire; Conditions: Prone; Advantage and Disadvantage",
+      "audit_note": "Specified sight and 30-foot range; ranged attacks within 5 feet are not inherently disadvantaged by prone.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q042": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Identify (p. 155); Spellcasting: Rituals",
+      "audit_note": "Normal casting takes one minute; a ritual would take eleven minutes.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q043": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Adventuring: Falling",
+      "audit_note": "Maximum falling damage is 20d6.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q044": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Conditions: Restrained",
+      "audit_note": "Restrained sets speed to zero; it does not halve speed.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q045": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Druid: Wild Shape, Beast Shapes",
+      "audit_note": "Flight becomes available at druid level 8; key must contain option D, not numeral 8.",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    "Q046": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Tools table (p. 70)",
+      "audit_note": "Alchemist's supplies cost 50 gp, not 30 gp.",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    "Q047": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Races: Dwarf (p. 3)",
+      "audit_note": "Walking speed is 25 feet and heavy armor does not reduce it.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q048": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Conditions: Incapacitated",
+      "audit_note": "No actions or reactions.",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    "Q049": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Spellcasting: Bonus Action (p. 101)",
+      "audit_note": "Restriction applies only to the same turn and allows one-action cantrips.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q050": {
+      "type": "multiple_choice",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Barbarian: Unarmored Defense (p. 8)",
+      "audit_note": "10 plus Dexterity and Constitution modifiers; shield remains allowed.",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    "Q051": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Cleric: Hit Points",
+      "audit_note": "Hit Die is d8 per cleric level.",
+      "accepted_answers": [
+        "d8",
+        "1d8"
+      ]
+    },
+    "Q052": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Multiclassing Prerequisites table",
+      "audit_note": "Strength 13 AND Charisma 13, not either score.",
+      "accepted_answers": [
+        "Strength 13 and Charisma 13",
+        "Str 13 and Cha 13",
+        "13 Strength and 13 Charisma"
+      ]
+    },
+    "Q053": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Weapons table",
+      "audit_note": "Greatsword deals 2d6; changed singular die to dice.",
+      "accepted_answers": [
+        "2d6"
+      ]
+    },
+    "Q054": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Fireball",
+      "audit_note": "Range is 150 feet, distinct from area radius.",
+      "accepted_answers": [
+        "150 ft",
+        "150",
+        "150 ft",
+        "150 feet"
+      ]
+    },
+    "Q055": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Beyond 1st Level: Character Advancement table",
+      "audit_note": "6500 total XP; moving from the level-4 minimum of 2700 requires 3800 more. Removed total/increment ambiguity.",
+      "accepted_answers": [
+        "6,500 XP",
+        "6500",
+        "6,500",
+        "6500 XP"
+      ]
+    },
+    "Q056": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Resting: Short Rest",
+      "audit_note": "Can spend any or all remaining Hit Dice.",
+      "accepted_answers": [
+        "Any/all remaining Hit Dice",
+        "all remaining Hit Dice",
+        "any/all remaining Hit Dice",
+        "all remaining",
+        "all"
+      ]
+    },
+    "Q057": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Spellcasting: Components",
+      "audit_note": "V is verbal.",
+      "accepted_answers": [
+        "**V**",
+        "V",
+        "verbal"
+      ]
+    },
+    "Q058": {
+      "type": "short_answer",
+      "review_status": "provisional",
+      "change": "retained",
+      "sources": [
+        "phb"
+      ],
+      "locator": "Backgrounds: Guild Artisan (p. 132)",
+      "audit_note": "One artisan-tool proficiency. Primary full text not accessible in this audit; retained provisionally.",
+      "accepted_answers": [
+        "1",
+        "one"
+      ]
+    },
+    "Q059": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Bard: Bardic Inspiration (p. 12)",
+      "audit_note": "At level 10 the die becomes d10.",
+      "accepted_answers": [
+        "d10",
+        "1d10"
+      ]
+    },
+    "Q060": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "basic_items"
+      ],
+      "locator": "Using a Magic Item",
+      "audit_note": "A small taste identifies the potion; removed invented DC 15 Arcana rule.",
+      "accepted_answers": [
+        "No ability check is required",
+        "none",
+        "no check",
+        "no ability check is required"
+      ]
+    },
+    "Q061": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Adventuring Gear table (p. 69)",
+      "audit_note": "Healer's kit weighs 3 lb.",
+      "accepted_answers": [
+        "3 lb",
+        "3",
+        "3 lb",
+        "3 lbs",
+        "3 pounds"
+      ]
+    },
+    "Q062": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Shield",
+      "audit_note": "Abjuration.",
+      "accepted_answers": [
+        "Abjuration",
+        "abjuration"
+      ]
+    },
+    "Q063": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Wizard: Your Spellbook, Copying a Spell into the Book",
+      "audit_note": "50 gp per spell level; distinguished copying a new spell from replacing one's own book and excluded discounts.",
+      "accepted_answers": [
+        "50 gp",
+        "50",
+        "50 gp"
+      ]
+    },
+    "Q064": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Conjure Woodland Beings (p. 129)",
+      "audit_note": "Highest individual CR is 2; upcasting increases numbers, not the maximum CR.",
+      "accepted_answers": [
+        "CR 2",
+        "2",
+        "CR 2"
+      ]
+    },
+    "Q065": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Animated Objects: Flying Sword (p. 264)",
+      "audit_note": "Listed average is 17 HP (5d6); clarified monster rather than Animate Objects.",
+      "accepted_answers": [
+        "17 HP",
+        "17",
+        "17 HP"
+      ]
+    },
+    "Q066": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Hold Person",
+      "audit_note": "Wisdom saving throw.",
+      "accepted_answers": [
+        "Wisdom save",
+        "Wisdom"
+      ]
+    },
+    "Q067": {
+      "type": "short_answer",
+      "review_status": "provisional",
+      "change": "question_and_answer",
+      "sources": [
+        "phb"
+      ],
+      "locator": "Feats: Mobile (p. 168)",
+      "audit_note": "Corrected feat name and separated its +10-foot speed benefit from its Dash/difficult-terrain benefit. Full text needs verification.",
+      "accepted_answers": [
+        "+10 feet",
+        "10 feet",
+        "+10 ft",
+        "10 ft"
+      ]
+    },
+    "Q068": {
+      "type": "short_answer",
+      "review_status": "provisional",
+      "change": "question_and_answer",
+      "sources": [
+        "dmg"
+      ],
+      "locator": "Between Adventures: Crafting a Magic Item (pp. 128-129)",
+      "audit_note": "100 gp divided by 25 gp/day is four days; old 100-day answer was wrong. Arithmetic is clear, but the 2014 option's source needs verification.",
+      "accepted_answers": [
+        "4 days",
+        "4"
+      ]
+    },
+    "Q069": {
+      "type": "short_answer",
+      "review_status": "provisional",
+      "change": "question_and_answer",
+      "sources": [
+        "phb"
+      ],
+      "locator": "Fighter: Eldritch Knight Spellcasting table (p. 75)",
+      "audit_note": "Provisional correction to third-level maximum at fighter 14; fourth-level slots arrive at 19. No new slot level is gained at 14.",
+      "accepted_answers": [
+        "3rd level",
+        "3rd",
+        "third level"
+      ]
+    },
+    "Q070": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Magic Items: Attunement",
+      "audit_note": "One attunement if required; artifact rarity alone does not establish an attunement requirement.",
+      "accepted_answers": [
+        "1",
+        "one"
+      ]
+    },
+    "Q071": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "question",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Reach and Weapons table",
+      "audit_note": "Glaive adds five feet to normal reach for its attacks; specified normal reach of five feet.",
+      "accepted_answers": [
+        "10 ft",
+        "10",
+        "10 ft",
+        "10 feet"
+      ]
+    },
+    "Q072": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Guidance",
+      "audit_note": "Adds d4 to one ability check under the spell's conditions.",
+      "accepted_answers": [
+        "d4",
+        "1d4"
+      ]
+    },
+    "Q073": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Adventuring: Climbing, Swimming, and Crawling",
+      "audit_note": "Replaced an undefined underwater long-jump trick question with explicit swimming movement cost.",
+      "accepted_answers": [
+        "2 feet",
+        "2",
+        "2 ft"
+      ]
+    },
+    "Q074": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Fighter: Second Wind",
+      "audit_note": "1d10 plus fighter level, not Constitution modifier.",
+      "accepted_answers": [
+        "1d10 + 10 hit points",
+        "1d10+10",
+        "1d10 + 10"
+      ]
+    },
+    "Q075": {
+      "type": "short_answer",
+      "review_status": "verified",
+      "change": "retained",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Conditions: Exhaustion",
+      "audit_note": "Six levels cause death in the 2014 rules.",
+      "accepted_answers": [
+        "6",
+        "six"
+      ]
+    },
+    "Q076": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd",
+        "sac"
+      ],
+      "locator": "Subtle Spell; Hold Monster; Counterspell; SAC: Sorcerer",
+      "audit_note": "Material component remains; specified visible handling. Removed imaginary identification/Ready rules.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q077": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Haste (p. 153); Combat: Bonus Actions",
+      "audit_note": "Already resolved attack remains; no movement/actions through next turn and no additional speed halving.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q078": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Spellcasting: Concentration; Polymorph",
+      "audit_note": "DC 14, modifier +3 under explicit assumptions; damaged caster and transformed ally are different creatures.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q079": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Alchemist's Fire (p. 66), Improvised Weapons, Tools",
+      "audit_note": "20-foot item-specific throw, no immediate fire tick, no alchemist-tool attack proficiency, DC 10 Dexterity extinguishing check. Damage-modifier debate excluded.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q080": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Rogue: Sneak Attack; Fighter: Action Surge; Combat: Ready",
+      "audit_note": "Added the missing extra-action requirement; once per turn does not mean once per round.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q081": {
+      "type": "scenario",
+      "review_status": "provisional",
+      "change": "question_and_answer",
+      "sources": [
+        "phb"
+      ],
+      "locator": "Feats: Mounted Combatant (p. 168)",
+      "audit_note": "Provisional replacement of fabricated rider defenses with melee advantage against smaller unmounted targets; full feat needs source verification.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q082": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Warlock: Devil's Sight; Darkness; Combat: Unseen Attackers and Targets",
+      "audit_note": "Specified warlock invocation and enemy senses to avoid assuming everyone inside is blinded.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q083": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd",
+        "phb_errata"
+      ],
+      "locator": "Simulacrum (p. 180); Wish (p. 193); Cure Wounds; PH errata: Simulacrum",
+      "audit_note": "Removed fabricated no-healing clause; distinguish laboratory repair, Wish's listed restoration, construct healing exclusions, and wish stress.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q084": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Combat: Grappling, Moving a Grappled Creature; Conditions: Prone",
+      "audit_note": "Dragging exception requires target at least two sizes smaller, not one.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q085": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Goodberry; Bag of Holding",
+      "audit_note": "Magic expires at 24 hours; bag has no time-stasis rule and spell does not say berries wither.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q086": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Druid: Wild Shape",
+      "audit_note": "Immediate reversion, carryover damage, and later healing in normal form; 0 beast HP does not necessarily mean unconscious druid.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q087": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "sac"
+      ],
+      "locator": "Feats: Sentinel, interaction with Mobile",
+      "audit_note": "Official ruling confirms Mobile can prevent the opportunity attack; removed fictional Mobile effects.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q088": {
+      "type": "scenario",
+      "review_status": "interpretation",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Tiny Hut (p. 187); Teleportation Circle (p. 186)",
+      "audit_note": "Boundary restriction works both ways; caster leaving ends hut. Teleport/portal interpretation is explicitly not a fixed yes/no answer.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q089": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "answer",
+      "sources": [
+        "srd",
+        "phb_errata"
+      ],
+      "locator": "Disintegrate; Revivify; PH errata: Disintegrate",
+      "audit_note": "Specific restoration restriction after disintegration; being hit without disintegrating is a different situation.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q090": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "answer",
+      "sources": [
+        "srd",
+        "sac"
+      ],
+      "locator": "Counterspell; Combat: Reactions; SAC: Casting Time",
+      "audit_note": "Interruptions resolve inside-out; each needs its own eligible reaction and slot.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q091": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Animate Dead (pp. 115-116)",
+      "audit_note": "One created or four renewed at third level, plus two per higher slot level; separate castings are additive across groups, control lasts 24 hours.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q092": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Resting: Long Rest (p. 87)",
+      "audit_note": "At least one hour is sufficient; first hour-long fight already interrupts. Removed incorrect XGE attribution.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q093": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Using Ability Scores: Hiding; Conditions: Invisible",
+      "audit_note": "Cannot hide from clear sight; DM judges circumstances; no blanket cover prerequisite or automatic hidden status from invisibility.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q094": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "scag_errata",
+        "srd"
+      ],
+      "locator": "SCAG errata p. 1: Extra Attack; Shocking Grasp",
+      "audit_note": "Version locked to revised feature; example includes a free hand for somatic casting.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q095": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Devils: Barbed Devil; Equipment: Silvered Weapons",
+      "audit_note": "Specified stat block, whose resistance excludes silvered attacks; silver does not make weapon magical.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q096": {
+      "type": "scenario",
+      "review_status": "provisional",
+      "change": "question_and_answer",
+      "sources": [
+        "dmg"
+      ],
+      "locator": "Treasure: Variant, Mixing Potions (p. 140)",
+      "audit_note": "Optional, not compulsory. Removed unsupported outcome ranges; full primary table remains unverified and item is excluded from scoring.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q097": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Equipment: Armor; Adventuring: Swimming",
+      "audit_note": "No armor-specific Athletics disadvantage; separated nonproficiency, Strength, encumbrance, and rough-water checks.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q098": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Combat: Being Prone; Conditions: Prone; Lightning Bolt",
+      "audit_note": "Dropping costs no action or speed on your turn; no saving-throw advantage; standing costs half speed.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q099": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Heat Metal (p. 153); Adamantine Armor (p. 207)",
+      "audit_note": "Crit protection irrelevant; repeated damage needs bonus action; disadvantage lasts until caster's next turn and can be reapplied.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    },
+    "Q100": {
+      "type": "scenario",
+      "review_status": "verified",
+      "change": "question_and_answer",
+      "sources": [
+        "srd"
+      ],
+      "locator": "Cleric: Turn Undead and Destroy Undead; Legendary Resistance trait",
+      "audit_note": "Legendary Resistance changes failure to success; destruction requires the cleric feature and eligible CR.",
+      "rubric": [
+        "0: misses the central rule or asserts the original erroneous ruling.",
+        "1: identifies the central rule but omits an important condition explained in the reference answer.",
+        "2: correctly explains the reference answer's material rules and assumptions without contradictory claims."
+      ]
+    }
+  }
+}

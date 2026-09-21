@@ -1,152 +1,250 @@
-import os
+"""Run the 2014 D&D question bank against LM Studio, with conservative grading."""
+
+from __future__ import annotations
+
 import argparse
-from typing import List, Dict, Optional
-try:
-    import lmstudio as lms
-except ImportError:  # pragma: no cover - optional dependency for tests
-    lms = None
+import importlib
+import json
+import math
+import os
+import re
+import sys
+from datetime import UTC, datetime
+from importlib.metadata import version
+from pathlib import Path
+from typing import Protocol
+
+from dataset import ROOT, Dataset, Item, load_dataset, normalize_answer
+
+
+class Client(Protocol):
+    def generate(self, prompt: str) -> str: ...
 
 
 class LMStudioClient:
-    """Client to interact with local LM Studio models via the lmstudio-python SDK."""
+    """Use the SDK's default local connection and a fresh prompt for each item."""
 
-    def __init__(self, model_name: str):
-        if lms is None:
-            raise ImportError(
-                "lmstudio package is required for LMStudioClient but is not installed"
-            )
-        # Initialize the model using the convenience API
+    def __init__(self, model_name: str, temperature: float = 0.0, max_tokens: int = 1024):
+        try:
+            lms = importlib.import_module("lmstudio")
+        except ImportError as exc:
+            raise RuntimeError(
+                "Install LM Studio support: python -m pip install -r requirements.txt"
+            ) from exc
         self.model = lms.llm(model_name)
+        self.config = {"temperature": temperature, "maxTokens": max_tokens}
 
     def generate(self, prompt: str) -> str:
-        """Send prompt to the model and return its response text."""
-        result = self.model.respond(prompt)
-        # result may be a string or an object with a text attribute
-        if isinstance(result, str):
+        # PredictionResult.__str__ is the SDK's documented text interface.
+        return str(self.model.respond(prompt, config=self.config))
+
+
+class DryRunClient:
+    def generate(self, prompt: str) -> str:
+        return "[DRY RUN: no model was queried]"
+
+
+def grade(response: str, item: Item) -> dict:
+    """Score a definite MC choice; accept known short answers; otherwise defer."""
+    result = {"status": "needs_review", "score": None, "reason": "manual_scenario"}
+    if item.metadata["review_status"] != "verified":
+        result["reason"] = item.metadata["review_status"]
+        return result
+    if item.metadata["type"] == "multiple_choice":
+        # Full match prevents guessing from reasoning, multiple options, or negations.
+        text = normalize_answer(response)
+        match = re.fullmatch(r"(?:answer:\s*)?([a-d])[.)]?", text)
+        if not match:
+            result["reason"] = "unrecognized_choice"
             return result
-        # try common attributes for response text
-        return getattr(result, 'text', str(result))
+        correct = match[1].upper() == item.answer
+        return {
+            "status": "correct" if correct else "incorrect",
+            "score": int(correct),
+            "reason": "explicit_choice",
+        }
+    if item.metadata["type"] == "short_answer":
+        if normalize_answer(response) in {
+            normalize_answer(a) for a in item.metadata["accepted_answers"]
+        }:
+            return {"status": "correct", "score": 1, "reason": "accepted_short_answer"}
+        result["reason"] = "unrecognized_short_answer"
+    return result
 
 
-def load_questions(path: str) -> List[str]:
-    """Load question texts from a directory and append section instructions."""
-    files = sorted(f for f in os.listdir(path) if f.endswith('.md'))
-
-    section_i = "Choose the one best answer (A–D)."
-    section_ii = "Give a single word, number, or brief phrase."
-    section_iii = (
-        "Explain what happens according to official rules. A thorough answer "
-        "cites page numbers or core-rule sources where possible."
-    )
-
-    questions: List[str] = []
-    for fname in files:
-        with open(os.path.join(path, fname), 'r', encoding='utf-8') as f:
-            text = f.read().strip()
-
-        # Determine section by question number in filename, e.g., Q001.md
-        try:
-            qnum = int(fname[1:4])
-        except ValueError:
-            qnum = 0
-
-        if 1 <= qnum <= 50:
-            text = f"{text}\n\n{section_i}"
-        elif 51 <= qnum <= 75:
-            text = f"{text}\n\n{section_ii}"
-        else:
-            text = f"{text}\n\n{section_iii}"
-
-        questions.append(text)
-    return questions
+def summarize(results: list[dict]) -> dict:
+    """Keep pending/unreviewed items outside the automatically scored denominator."""
+    scored = [r for r in results if r["grade"]["score"] is not None]
+    correct = sum(r["grade"]["score"] for r in scored)
+    return {
+        "total_items": len(results),
+        "answered": sum(r["response"] is not None for r in results),
+        "automatically_scored": len(scored),
+        "automatically_correct": correct,
+        "needs_review": sum(r["grade"]["status"] == "needs_review" for r in results),
+        "not_run": sum(r["grade"]["status"] == "not_run" for r in results),
+        # This is explicitly not a whole-benchmark accuracy estimate.
+        "accuracy_on_automatically_scored": correct / len(scored) if scored else None,
+    }
 
 
-def load_answers(path: str) -> List[str]:
-    """Load answer texts from a directory."""
-    files = sorted(f for f in os.listdir(path) if f.endswith('.md'))
-    answers: List[str] = []
-    for fname in files:
-        with open(os.path.join(path, fname), 'r', encoding='utf-8') as f:
-            answers.append(f.read().strip())
-    return answers
+def _now() -> str:
+    return datetime.now(UTC).isoformat()
 
 
-def run_benchmark(client: LMStudioClient, questions: List[str]) -> List[str]:
-    """Query the model for each question, printing progress and responses."""
-    responses = []
-    total = len(questions)
-    bar_width = 20
-    for i, prompt in enumerate(questions, start=1):
-        resp = client.generate(prompt)
-        responses.append(resp)
-
-        filled = int(bar_width * i / total)
-        bar = "#" * filled + "-" * (bar_width - filled)
-        print(f"[{bar}] {i}/{total}")
-        print(resp)
-    return responses
+def _save_report(output: Path, report: dict) -> None:
+    report["summary"] = summarize(report["results"])
+    temporary = output / "results.json.tmp"
+    temporary.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    temporary.replace(output / "results.json")
 
 
-def grade(
-    responses: List[str],
-    answers: List[str],
-    output_dir: Optional[str] = None,
-) -> Dict[int, float]:
-    """Placeholder grading logic.
+def run_benchmark(
+    client: Client,
+    dataset: Dataset,
+    output_dir: Path,
+    *,
+    model_name: str,
+    dry_run: bool = False,
+    generation_config: dict | None = None,
+) -> dict:
+    """Preserve each raw response and mark incomplete runs without overwriting runs."""
+    output_dir.mkdir(parents=True, exist_ok=False)
+    report = {
+        "report_schema_version": 1,
+        "dataset_version": dataset.metadata["dataset_version"],
+        "dataset_sha256": dataset.fingerprint,
+        "ruleset": dataset.metadata["ruleset"],
+        "model": model_name,
+        "dry_run": dry_run,
+        "generation_config": generation_config,
+        "python_version": sys.version,
+        "started_at": _now(),
+        "finished_at": None,
+        "status": "running",
+        "sources": dataset.metadata["sources"],
+        "results": [
+            {
+                "id": i.id,
+                "prompt": i.prompt,
+                "reference_answer": i.answer,
+                "audit": i.metadata,
+                "response": None,
+                "grade": {"status": "not_run", "score": None, "reason": "not_run"},
+            }
+            for i in dataset.items
+        ],
+    }
+    _save_report(output_dir, report)
+    try:
+        for index, (item, result) in enumerate(
+            zip(dataset.items, report["results"], strict=True), 1
+        ):
+            response = client.generate(item.prompt)
+            if not isinstance(response, str):
+                raise TypeError(f"{item.id}: model response must be text")
+            (output_dir / f"{item.id}.txt").write_text(response, encoding="utf-8")
+            result["response"] = response
+            result["grade"] = (
+                {"status": "dry_run", "score": None, "reason": "dry_run"}
+                if dry_run
+                else grade(response, item)
+            )
+            _save_report(output_dir, report)
+            print(
+                f"[{index}/{len(dataset.items)}] {item.id}: {result['grade']['status']}", flush=True
+            )
+    except (Exception, KeyboardInterrupt) as exc:
+        report["status"] = "interrupted" if isinstance(exc, KeyboardInterrupt) else "failed"
+        report["error"] = f"{type(exc).__name__}: {exc}"
+        report["finished_at"] = _now()
+        _save_report(output_dir, report)
+        raise
+    report["status"] = "completed"
+    report["finished_at"] = _now()
+    _save_report(output_dir, report)
+    return report
 
-    All responses are saved under ``output_dir`` if provided so that they can be
-    graded by an external model. Each question gets its own ``Q###.txt`` file
-    containing the model's response.
-    """
 
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
-        for i, resp in enumerate(responses, start=1):
-            file_path = os.path.join(output_dir, f"Q{i:03}.txt")
-            with open(file_path, "w", encoding="utf-8") as f:
-                f.write(resp)
-
-    scores: Dict[int, float] = {}
-    for i, _ in enumerate(responses, start=1):
-        scores[i] = 0.0
-    return scores
-
-
-def main():
-    parser = argparse.ArgumentParser(
-        description='Run D&D benchmark with LM Studio local models.'
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--model", default=os.environ.get("LM_STUDIO_MODEL"), help="LM Studio model identifier"
     )
     parser.add_argument(
-        '--model', type=str, default=os.environ.get('LM_STUDIO_MODEL', 'qwen/qwen3-32b'),
-        help='Name of the local model to load'
+        "--dataset-dir",
+        type=Path,
+        default=ROOT,
+        help="Root containing questions, answers, and dataset.json",
     )
     parser.add_argument(
-        '--questions-dir', type=str, default='questions',
-        help='Path to the directory containing question .md files'
+        "--output-dir",
+        type=Path,
+        default=Path("report"),
+        help="New directory for this run (must not exist)",
     )
-    parser.add_argument(
-        '--answers-dir', type=str, default='answers',
-        help='Path to the directory containing answer .md files'
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--validate-only", action="store_true", help="Validate data offline and exit")
+    mode.add_argument(
+        "--dry-run", action="store_true", help="Exercise reports offline; no scores or model calls"
     )
-    parser.add_argument(
-        '--output-dir', type=str, default='report',
-        help='Directory to write model responses for external grading'
-    )
-    args = parser.parse_args()
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--max-tokens", type=int, default=1024)
+    args = parser.parse_args(argv)
+    if not math.isfinite(args.temperature) or args.temperature < 0 or args.max_tokens < 1:
+        parser.error("temperature must be finite and nonnegative; max-tokens must be positive")
+    try:
+        dataset = load_dataset(args.dataset_dir)
+        provisional = [i.id for i in dataset.items if i.metadata["review_status"] == "provisional"]
+        print(
+            f"Validated {len(dataset.items)} items; dataset {dataset.metadata['dataset_version']}."
+        )
+        print(
+            f"Source verification pending (excluded from automatic scoring): {', '.join(provisional) or 'none'}"
+        )
+        if args.validate_only:
+            return 0
+        if args.output_dir.exists():
+            raise FileExistsError(
+                f"Output directory already exists: {args.output_dir}. Choose a new run directory."
+            )
+        if not args.dry_run and not args.model:
+            parser.error("--model (or LM_STUDIO_MODEL) is required unless running offline")
+        client = (
+            DryRunClient()
+            if args.dry_run
+            else LMStudioClient(args.model, args.temperature, args.max_tokens)
+        )
+        config = (
+            None
+            if args.dry_run
+            else {
+                "temperature": args.temperature,
+                "maxTokens": args.max_tokens,
+                "lmstudio_sdk_version": version("lmstudio"),
+                "other_settings": "LM Studio defaults; record model quantization and server settings separately",
+            }
+        )
+        report = run_benchmark(
+            client,
+            dataset,
+            args.output_dir,
+            model_name=args.model or "dry-run",
+            dry_run=args.dry_run,
+            generation_config=config,
+        )
+        print(json.dumps(report["summary"], indent=2))
+        print(f"Saved report: {args.output_dir / 'results.json'}")
+        return 0
+    except KeyboardInterrupt:
+        print(
+            "Interrupted; completed responses are preserved in the run directory.", file=sys.stderr
+        )
+        return 130
+    except Exception as exc:
+        print(f"Benchmark failed: {exc}", file=sys.stderr)
+        return 1
 
-    client = LMStudioClient(args.model)
-    questions = load_questions(args.questions_dir)
-    answers = load_answers(args.answers_dir)
 
-    print(f"Loaded {len(questions)} questions and {len(answers)} answers.")
-    print("Running benchmark...")
-    responses = run_benchmark(client, questions)
-    scores = grade(responses, answers, args.output_dir)
-
-    print("Results:")
-    for idx, score in scores.items():
-        print(f"Q{idx:03}: {score}")
-
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":  # pragma: no cover - exercised by subprocess tests
+    raise SystemExit(main())
