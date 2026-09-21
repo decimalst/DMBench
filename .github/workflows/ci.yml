@@ -30,7 +30,7 @@ jobs:
       - run: python benchmark_outline.py --dry-run --output-dir reports/ci-smoke
       - run: python benchmark_outline.py --provider brev --dry-run --limit 1 --output-dir reports/brev-smoke
       - run: python benchmark_outline.py --provider bedrock --dry-run --limit 1 --output-dir reports/bedrock-smoke
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: validation-python-${{ matrix.python-version }}
