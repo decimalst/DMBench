@@ -28,13 +28,15 @@ jobs:
       - run: python manage_dataset.py --check
       - run: python -m pytest --cov --cov-report=term-missing --cov-report=xml
       - run: python benchmark_outline.py --dry-run --output-dir reports/ci-smoke
+      - run: python benchmark_outline.py --provider brev --dry-run --limit 1 --output-dir reports/brev-smoke
+      - run: python benchmark_outline.py --provider bedrock --dry-run --limit 1 --output-dir reports/bedrock-smoke
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: validation-python-${{ matrix.python-version }}
           path: |
             coverage.xml
-            reports/ci-smoke/results.json
+            reports/*/results.json
 
   sdk-contract:
     runs-on: ubuntu-latest
@@ -44,5 +46,5 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: python -m pip install -r requirements.txt -r requirements-dev.txt
-      - run: python -m pytest tests/test_sdk_contract.py
+      - run: python -m pip install -r requirements.txt -r requirements-bedrock.txt -r requirements-dev.txt
+      - run: python -m pytest tests/test_sdk_contract.py tests/test_bedrock_sdk.py

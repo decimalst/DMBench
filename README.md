@@ -2,9 +2,9 @@
 
 [![Tests and data validation](https://github.com/decimalst/DMBench/actions/workflows/ci.yml/badge.svg)](https://github.com/decimalst/DMBench/actions/workflows/ci.yml)
 
-**A local-model evaluation set for Dungeons & Dragons fifth edition's 2014 rules.**
+**A local and hosted model evaluation set for Dungeons & Dragons fifth edition's 2014 rules.**
 
-DMBench asks 100 rules questions through LM Studio, preserves the responses, and provides a source-backed answer key for review. Tests and data validation run offline, without a model, account, or API key.
+DMBench asks 100 rules questions through LM Studio, an OpenAI-compatible endpoint (including models hosted on NVIDIA Brev), or AWS Bedrock. It preserves the responses and provides a source-backed answer key for review. Tests and data validation run offline, without a model, account, or API key.
 
 **Dataset version 2.0.0 uses the 2014 rules with official errata, not the 2024 revision.** Q094 explicitly uses the revised Bladesinger feature. The [content audit](docs/CONTENT_AUDIT.md) documents every item: **93 source-verified, 1 interpretive, and 6 provisional pending access to the relevant 2014 book text**. Provisional items cannot receive automatic scores.
 
@@ -30,6 +30,17 @@ python benchmark_outline.py --dry-run --output-dir reports/offline-demo
 
 This writes 100 clearly labeled placeholder responses and a report with **no scores**. Use a new output directory for every run; existing directories are never overwritten.
 
+## Choose a provider
+
+| `--provider` | Connection | Optional dependency |
+|---|---|---|
+| `lmstudio` (default) | Local LM Studio SDK | `requirements.txt` |
+| `brev` | Your Brev-hosted NIM/vLLM chat-completion endpoint | None |
+| `openai-compatible` | Any compatible `/chat/completions` endpoint | None |
+| `bedrock` | AWS Bedrock Converse API | `requirements-bedrock.txt` |
+
+All providers use the same prompts, question bank, and grading policy. Hosted runs contact your configured service and can incur inference charges. Start with `--limit 1` to check the connection; omit it for all 100 questions. DMBench connects to existing deployments—it does not provision GPU instances or deploy models.
+
 ## Run a local model
 
 1. Install [LM Studio](https://lmstudio.ai/), download/load a model, and enable its local server in the Developer tab (or run `lms server start`).
@@ -49,11 +60,60 @@ This writes 100 clearly labeled placeholder responses and a report with **no sco
      --output-dir reports/my-model-run-01
    ```
 
-`LM_STUDIO_MODEL` can supply the model identifier instead of `--model`. The SDK uses its default local connection. This script does not implement custom server URL or token environment variables. See the [SDK documentation](https://lmstudio.ai/docs/python/llm-prediction/chat-completion) for its connection and prediction interfaces.
+`LM_STUDIO_MODEL` can supply the model identifier instead of `--model`. The SDK uses its default local connection. For a remote LM Studio HTTP server, use `--provider openai-compatible --base-url` instead. See the [SDK documentation](https://lmstudio.ai/docs/python/llm-prediction/chat-completion) for its connection and prediction interfaces.
 
 Every question starts a fresh conversation. Only the edition instruction, question, and answer-format instruction reach the model; the reference answer and audit notes do not. The data is fully validated before model initialization. `--dataset-dir` selects another root with the same 100-item contract; the default bank resolves relative to the script, even if invoked from another working directory.
 
 Use `python benchmark_outline.py --help` for all options. Model downloads and inference are not part of the test suite.
+
+## Run a model hosted on NVIDIA Brev
+
+Deploy a compatible model server on your Brev instance, then forward its API port in a separate terminal:
+
+```bash
+brev port-forward my-instance --port 8000:8000
+```
+
+Run a one-question smoke test using the model identifier exposed by that server:
+
+```bash
+python benchmark_outline.py \
+  --provider brev \
+  --base-url http://localhost:8000/v1 \
+  --model "YOUR_SERVED_MODEL_ID" \
+  --limit 1 \
+  --output-dir reports/brev-smoke
+```
+
+`brev` uses the same adapter as `openai-compatible`; it records Brev as the provider in the report. The server must expose `/chat/completions` under the supplied API root. The [NVIDIA Brev guide](https://docs.nvidia.com/brev/guides/inference-deployment/deploying-nims) documents NIM deployment and recommends port forwarding for API clients; browser-authenticated tunnel links may return a login page or redirect instead of an API response.
+
+For a protected HTTPS endpoint, set its inference bearer token in `DMBENCH_API_KEY` through your environment or secret manager. `--api-key-env MY_PROVIDER_TOKEN` selects another environment variable; its value never appears in CLI arguments or report configuration. Unauthenticated port-forwarded servers need no key. A Brev management or NGC download key is not automatically an inference endpoint credential.
+
+## Run AWS Bedrock
+
+Install the AWS adapter dependency and use your normal AWS credentials (SSO/profile, environment, or workload role):
+
+```bash
+python -m pip install -r requirements-bedrock.txt
+
+python benchmark_outline.py \
+  --provider bedrock \
+  --aws-region us-east-1 \
+  --aws-profile research \
+  --model "YOUR_CONVERSE_MODEL_OR_INFERENCE_PROFILE_ID" \
+  --limit 1 \
+  --output-dir reports/bedrock-smoke
+```
+
+Omit `--aws-profile` to use the standard credential chain. You need access to the model in the selected region and permission for `bedrock:InvokeModel`. Some models use an inference-profile ID/ARN rather than a bare foundation-model ID. Use a model that supports the [Bedrock Converse API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html).
+
+Both hosted adapters support `--request-timeout 120` and `--temperature default` to omit the temperature parameter when the selected model requires its own default. OpenAI-compatible servers can select `--token-parameter max_completion_tokens` instead of the default `max_tokens`. Unsupported model parameters fail explicitly; there is no silent parameter change, provider fallback, or automatic inference retry.
+
+[Hosted model setup and troubleshooting](docs/HOSTED_MODELS.md) covers authentication, endpoint formats, partial runs, and report metadata. To test report generation without credentials or network access:
+
+```bash
+python benchmark_outline.py --provider bedrock --dry-run --limit 1 --output-dir reports/bedrock-offline
+```
 
 ## Understand the results
 
@@ -77,11 +137,11 @@ reports/my-model-run-01/
 └── results.json      # Inputs, references, sources, per-item grades, run metadata
 ```
 
-The JSON report records the dataset version and SHA-256 fingerprint, exact prompts, requested model identifier, SDK/Python versions, generation parameters, timestamps, raw responses, reference answers, and review status. Failed or interrupted runs keep completed responses and identify unanswered items. Reports use UTF-8 and are ignored by Git under `report/` and `reports/`.
+The JSON report records the dataset version and SHA-256 fingerprint, exact prompts, requested model identifier, SDK/Python versions where applicable, provider/endpoint or AWS region, generation parameters, timestamps, raw responses, reference answers, and review status. Report schema 2 also records the selected question IDs; `--limit` keeps the full-bank fingerprint while reducing the selected set. Hosted responses include token usage when supplied and a stop reason. Truncated, filtered, or otherwise incomplete hosted completions require review even if their text matches the answer key. Failed or interrupted runs keep completed responses and identify unanswered items. Reports use UTF-8 and are ignored by Git under `report/` and `reports/`.
 
 **`accuracy_on_automatically_scored` is not whole-benchmark accuracy.** It excludes pending responses, scenarios, unrecognized output, and provisional items. In particular, accepted short answers enter this denominator while unrecognized short answers do not: treating that ratio as a leaderboard score would be biased. Review all eligible responses and publish section-specific results, denominators, and grading decisions. Keep provisional items excluded until their sources are checked. The tool does not yet import manual grades or calculate a final human-reviewed score.
 
-Record the exact model file/quantization, LM Studio version, and other server settings alongside a published run. Temperature zero alone does not guarantee deterministic reproduction. Token limits can truncate answers; inspect the saved text. This small public question bank is not a validated measure of overall DM quality, and models may have seen its questions during training.
+Record the exact model file/quantization or hosted model revision, serving software version, and other deployment settings alongside a published run. Temperature zero alone does not guarantee deterministic reproduction. Token limits can truncate answers; inspect the saved text. This small public question bank is not a validated measure of overall DM quality, and models may have seen its questions during training.
 
 ## Review and maintain the question bank
 
@@ -107,9 +167,9 @@ Version 2 corrects numerous incorrect keys and scenario claims, and rewrites amb
 
 ## Automation
 
-[GitHub Actions](.github/workflows/ci.yml) runs on pushes and pull requests with Python 3.11, 3.12, 3.13, and 3.14. It checks lint, formatting, data validity, generated documents, tests, a **95% combined line/branch coverage minimum**, and an offline report smoke test. A separate job checks the installed LM Studio SDK contract without contacting a server. Coverage and smoke reports are uploaded as artifacts. Dependabot checks Python dependencies and Actions monthly.
+[GitHub Actions](.github/workflows/ci.yml) runs on pushes and pull requests with Python 3.11, 3.12, 3.13, and 3.14. It checks lint, formatting, data validity, generated documents, tests, a **95% combined line/branch coverage minimum**, and an offline report smoke test. A separate job checks the installed LM Studio SDK and validates Bedrock requests with the real AWS SDK's Stubber. All tests and smoke runs avoid live model services. Coverage and smoke reports are uploaded as artifacts. Dependabot checks Python dependencies and Actions monthly.
 
-The runtime SDK is separate from development dependencies so normal CI never needs a model or network service. Local mocked runs and SDK contract checks do not establish that a particular model works in LM Studio; perform a real run before publishing model results.
+Runtime SDKs are separate from development dependencies so normal CI never needs a model or network service. Local mocked runs and SDK contract checks do not establish that a particular model or hosted deployment is available; perform a real run before publishing model results.
 
 ## Sources and attribution
 

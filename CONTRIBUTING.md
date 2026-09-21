@@ -24,6 +24,12 @@ python -m pytest --cov
 python benchmark_outline.py --dry-run --output-dir reports/contribution-check
 ```
 
-Use a fresh output directory for each run. Tests use fake clients; no LM Studio download, credentials, or inference are required. Install `requirements.txt` to also exercise the real SDK's offline response-type contract. Keep the coverage gate at 95% or higher, and add tests for meaningful behavior and known regressions rather than merely increasing the number of assertions.
+Use a fresh output directory for each run. Tests use fake clients; no LM Studio download, credentials, or inference are required. Install `requirements.txt` and `requirements-bedrock.txt` to also exercise the real SDKs' offline contracts. Hosted provider tests must never require credentials, provision infrastructure, or call a billable endpoint. Keep the coverage gate at 95% or higher, and add tests for meaningful behavior and known regressions rather than merely increasing the number of assertions.
 
 When evaluating a model, preserve raw responses, state the exact dataset fingerprint and model/settings, and keep manual grading decisions separate from the original report. Report section-specific denominators. Automatically accepted short answers alone cannot establish short-answer accuracy.
+
+## Add or change a provider
+
+Adapters expose `generate(prompt) -> str`. Each call must send a fresh conversation containing only that prompt. Optional `last_response_metadata` records sanitized usage and stop reason, and sets `requires_review` when the completion is not known to be complete. Reset this metadata before each request so a failed request cannot reuse an earlier response's metadata.
+
+Preserve the requested inference parameters, enforce timeouts, and avoid implicit inference retries or provider fallback. Record nonsecret provider configuration in the report. Convert service errors to `ProviderError` without including response bodies, credential values, or SDK exception strings. For HTTP endpoints, do not forward authorization through redirects. Tests should cover payload contracts, rejected configuration, response parsing, failures, report metadata, and offline operation. Use AWS Stubber for SDK schema checks; use test doubles for ordinary CI.

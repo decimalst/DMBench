@@ -4,7 +4,7 @@ pythonpath = ["."]
 addopts = "-ra --strict-markers --strict-config"
 
 [tool.coverage.run]
-source = ["benchmark_outline", "dataset", "manage_dataset"]
+source = ["benchmark_outline", "dataset", "manage_dataset", "providers"]
 branch = true
 
 [tool.coverage.report]

@@ -1,0 +1,2 @@
+# Optional: only needed for AWS Bedrock Converse runs.
+boto3==1.43.98
